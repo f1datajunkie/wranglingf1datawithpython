@@ -1,0 +1,30 @@
+project:
+  type: book
+
+book:
+  title: "Wrangling Formula One Motorsport Data With Python"
+  author: "Tony Hirst"
+  date: "02/08/2022"
+  chapters:
+    - acknowledgements.md
+    - index.qmd
+    - intro.qmd
+    - part: "Exploring the fast-f1 Python package"
+      chapters: 
+      - fastf1-demo.ipynb
+    - whatnext.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrbook
+  epub:
+    cover-image: cover.png
+
+
+
+

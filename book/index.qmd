@@ -1,0 +1,5 @@
+# Preface {.unnumbered}
+
+Several years ago, I put together a collection of recipes for analysing and visualising Formula One results and timing data using the R programming language, and published them via the Leanpub self-publishing platform.
+
+

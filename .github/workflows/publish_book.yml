@@ -1,0 +1,19 @@
+name: quarto-setup
+
+on: 
+  branch: main
+
+jobs:
+  quarto-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Render Quarto Project
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          to: all # If set, it will be equivalent to `quarto render --to html`
+          path: ./book # By default, the current working dir is used i.e `quarto render .`
+      - name: GitHub Pages action
+        uses: peaceiris/actions-gh-pages@v3.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./book/_book
