@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Wrangling Formula One Motorsport Data With Python - 2&nbsp; Getting Started With FastF1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./whatnext.html" rel="next">
+<link href="./intro.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started With <code>FastF1</code></span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Wrangling Formula One Motorsport Data With Python</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./acknowledgements.html" class="sidebar-item-text sidebar-link">Acknowledgements</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Exploring the fast-f1 Python package</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fastf1-demo.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started With <code>FastF1</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./whatnext.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">What Next?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#driver-details" id="toc-driver-details" class="nav-link active" data-scroll-target="#driver-details"> <span class="header-section-number">2.1</span> Driver Details</a></li>
+  <li><a href="#laps-data" id="toc-laps-data" class="nav-link" data-scroll-target="#laps-data"> <span class="header-section-number">2.2</span> Laps Data</a></li>
+  <li><a href="#car-telemetry-data" id="toc-car-telemetry-data" class="nav-link" data-scroll-target="#car-telemetry-data"> <span class="header-section-number">2.3</span> Car Telemetry Data</a></li>
+  <li><a href="#simple-plots" id="toc-simple-plots" class="nav-link" data-scroll-target="#simple-plots"> <span class="header-section-number">2.4</span> Simple Plots</a></li>
+  <li><a href="#telemetry-visualisations-via-track-maps" id="toc-telemetry-visualisations-via-track-maps" class="nav-link" data-scroll-target="#telemetry-visualisations-via-track-maps"> <span class="header-section-number">2.5</span> Telemetry Visualisations via Track Maps</a></li>
+  <li><a href="#retrieving-data-from-the-ergast-api" id="toc-retrieving-data-from-the-ergast-api" class="nav-link" data-scroll-target="#retrieving-data-from-the-ergast-api"> <span class="header-section-number">2.6</span> Retrieving Data from the ergast API</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"> <span class="header-section-number">2.7</span> Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started With <code>FastF1</code></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>The <a href="https://github.com/theOehrly/Fast-F1"><code>theOehrly/Fast-F1</code></a> Python package [<a href="https://theoehrly.github.io/Fast-F1">docs</a>] provides a relatively straightforward way of downloading and accessing telemetry data from the Formula One website and the <em>ergast</em> historical motor racing results database.</p>
+<p>In this chapter, we’ll have a quick overview of the package to get a feel for the sorts of things we can do with it, before diving in to more detail in other chapters.</p>
+<p>Let’s start off by importing the package:</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Install with:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># %pip install --upgrade fastf1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&nbsp;Dev version:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># %pip install --upgrade https://github.com/theOehrly/Fast-F1/archive/refs/heads/master.zip</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastf1 <span class="im">as</span> ff1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The package API may change rapidly, and may include breaking changes.</p>
+<p>The code used in this chapter relates to version <code>2.2.9</code>.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the package version</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ff1.__version__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>'2.2.9'</code></pre>
+</div>
+</div>
+<p>To minimise the number of calls made to the website, the package can be configured to cache data whenever possible.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>cachedir <span class="op">=</span> <span class="st">".cache"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Path(cachedir).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ff1.Cache.enable_cache(cachedir)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre class="{note}"><code>If we request the same data again, the locally cached data will be used, rather than a call being made to the Formula One data service.
+
+This has the advantage that if you have already cached the data, you can load it even if you are offline.</code></pre>
+<p>Data can be retrieved for specific sessions of specific races.</p>
+<p><em>As the data is loaded, a diagnostic trace is displayed showing what data has been retrieved, and from where (for example, downloaded from the original API or retrieved from the cache).</em></p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a wualifying session ("Q") or a race session("R")</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>monza_quali <span class="op">=</span> ff1.get_session(<span class="dv">2019</span>, <span class="st">'Monza'</span>, <span class="st">'Q'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>monza_quali.load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>core           INFO     Loading data for Italian Grand Prix - Qualifying [v2.2.9]
+api            INFO     Using cached data for driver_info
+api            INFO     Using cached data for timing_data
+api            INFO     Using cached data for timing_app_data
+core           INFO     Processing timing data...
+api            INFO     Using cached data for session_status_data
+api            INFO     Using cached data for track_status_data
+api            INFO     Using cached data for car_data
+api            INFO     Using cached data for position_data
+api            INFO     Using cached data for weather_data
+api            INFO     Using cached data for race_control_messages
+core           INFO     Finished loading data for 20 drivers: ['16', '44', '77', '5', '3', '27', '55', '23', '18', '7', '99', '20', '26', '4', '10', '8', '11', '63', '88', '33']</code></pre>
+</div>
+</div>
+<p>A good selection of metadata is available to describe the associated event:</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>weekend <span class="op">=</span> monza_quali.event</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>weekend</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>RoundNumber                                                    14
+Country                                                     Italy
+Location                                                    Monza
+OfficialEventName    FORMULA 1 GRAN PREMIO HEINEKEN D’ITALIA 2019
+EventDate                                     2019-09-08 00:00:00
+EventName                                      Italian Grand Prix
+EventFormat                                          conventional
+Session1                                               Practice 1
+Session1Date                                  2019-09-06 00:00:00
+Session2                                               Practice 2
+Session2Date                                  2019-09-06 00:00:00
+Session3                                               Practice 3
+Session3Date                                  2019-09-07 00:00:00
+Session4                                               Qualifying
+Session4Date                                  2019-09-07 00:00:00
+Session5                                                     Race
+Session5Date                                  2019-09-08 00:00:00
+F1ApiSupport                                                 True
+Name: Italian Grand Prix, dtype: object</code></pre>
+</div>
+</div>
+<section id="driver-details" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="driver-details"><span class="header-section-number">2.1</span> Driver Details</h2>
+<p>A wide range of data is available, and can be can be explored in several ways.</p>
+<p>For example, we can get the data for a particular driver, and identify their fastest lap, along with various summary statistics for it:</p>
+<p>Here’s an example of the driver details:</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>monza_quali.get_driver(<span class="st">'LEC'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>DriverNumber                         16
+BroadcastName                 C LECLERC
+Abbreviation                        LEC
+TeamName                        Ferrari
+TeamColor                        dc0000
+FirstName                       Charles
+LastName                        Leclerc
+FullName                Charles Leclerc
+Position                            1.0
+GridPosition                        0.0
+Q1               0 days 00:01:20.126000
+Q2               0 days 00:01:19.553000
+Q3               0 days 00:01:19.307000
+Time                                NaT
+Status                                 
+Points                              0.0
+Name: Charles, dtype: object</code></pre>
+</div>
+</div>
+<p>We can retrieve summary data about each lap:</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>monza_quali.laps.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Time</th>
+      <th>DriverNumber</th>
+      <th>LapTime</th>
+      <th>LapNumber</th>
+      <th>Stint</th>
+      <th>PitOutTime</th>
+      <th>PitInTime</th>
+      <th>Sector1Time</th>
+      <th>Sector2Time</th>
+      <th>Sector3Time</th>
+      <th>...</th>
+      <th>IsPersonalBest</th>
+      <th>Compound</th>
+      <th>TyreLife</th>
+      <th>FreshTyre</th>
+      <th>LapStartTime</th>
+      <th>Team</th>
+      <th>Driver</th>
+      <th>TrackStatus</th>
+      <th>IsAccurate</th>
+      <th>LapStartDate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0 days 00:21:01.358000</td>
+      <td>16</td>
+      <td>NaT</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0 days 00:19:26.847000</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:30.837000</td>
+      <td>0 days 00:00:33.016000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>1.0</td>
+      <td>True</td>
+      <td>0 days 00:19:26.847000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>False</td>
+      <td>2019-09-07 13:04:27.940</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0 days 00:22:21.775000</td>
+      <td>16</td>
+      <td>0 days 00:01:20.417000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:26.982000</td>
+      <td>0 days 00:00:26.734000</td>
+      <td>0 days 00:00:26.701000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>2.0</td>
+      <td>True</td>
+      <td>0 days 00:21:01.358000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:06:02.451</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0 days 00:24:03.991000</td>
+      <td>16</td>
+      <td>0 days 00:01:42.216000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:33.988000</td>
+      <td>0 days 00:00:35.632000</td>
+      <td>0 days 00:00:32.596000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>3.0</td>
+      <td>True</td>
+      <td>0 days 00:22:21.775000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:07:22.868</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0 days 00:25:24.117000</td>
+      <td>16</td>
+      <td>0 days 00:01:20.126000</td>
+      <td>4</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:26.749000</td>
+      <td>0 days 00:00:26.777000</td>
+      <td>0 days 00:00:26.600000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>4.0</td>
+      <td>True</td>
+      <td>0 days 00:24:03.991000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:09:05.084</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0 days 00:27:09.461000</td>
+      <td>16</td>
+      <td>0 days 00:01:45.344000</td>
+      <td>5</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:33.884000</td>
+      <td>0 days 00:00:37.703000</td>
+      <td>0 days 00:00:33.757000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>5.0</td>
+      <td>True</td>
+      <td>0 days 00:25:24.117000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:10:25.210</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 27 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="laps-data" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="laps-data"><span class="header-section-number">2.2</span> Laps Data</h2>
+<p>A wide range of data is provided as part of the Laps table:</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>monza_quali.laps.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>Index(['Time', 'DriverNumber', 'LapTime', 'LapNumber', 'Stint', 'PitOutTime',
+       'PitInTime', 'Sector1Time', 'Sector2Time', 'Sector3Time',
+       'Sector1SessionTime', 'Sector2SessionTime', 'Sector3SessionTime',
+       'SpeedI1', 'SpeedI2', 'SpeedFL', 'SpeedST', 'IsPersonalBest',
+       'Compound', 'TyreLife', 'FreshTyre', 'LapStartTime', 'Team', 'Driver',
+       'TrackStatus', 'IsAccurate', 'LapStartDate'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<p>We can check the laps for a particular car:</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lec_laps <span class="op">=</span> monza_quali.laps.pick_driver(<span class="dv">16</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>lec_laps[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Time</th>
+      <th>DriverNumber</th>
+      <th>LapTime</th>
+      <th>LapNumber</th>
+      <th>Stint</th>
+      <th>PitOutTime</th>
+      <th>PitInTime</th>
+      <th>Sector1Time</th>
+      <th>Sector2Time</th>
+      <th>Sector3Time</th>
+      <th>...</th>
+      <th>IsPersonalBest</th>
+      <th>Compound</th>
+      <th>TyreLife</th>
+      <th>FreshTyre</th>
+      <th>LapStartTime</th>
+      <th>Team</th>
+      <th>Driver</th>
+      <th>TrackStatus</th>
+      <th>IsAccurate</th>
+      <th>LapStartDate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0 days 00:21:01.358000</td>
+      <td>16</td>
+      <td>NaT</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0 days 00:19:26.847000</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:30.837000</td>
+      <td>0 days 00:00:33.016000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>1.0</td>
+      <td>True</td>
+      <td>0 days 00:19:26.847000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>False</td>
+      <td>2019-09-07 13:04:27.940</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0 days 00:22:21.775000</td>
+      <td>16</td>
+      <td>0 days 00:01:20.417000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:26.982000</td>
+      <td>0 days 00:00:26.734000</td>
+      <td>0 days 00:00:26.701000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>2.0</td>
+      <td>True</td>
+      <td>0 days 00:21:01.358000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:06:02.451</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0 days 00:24:03.991000</td>
+      <td>16</td>
+      <td>0 days 00:01:42.216000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:33.988000</td>
+      <td>0 days 00:00:35.632000</td>
+      <td>0 days 00:00:32.596000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>3.0</td>
+      <td>True</td>
+      <td>0 days 00:22:21.775000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:07:22.868</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0 days 00:25:24.117000</td>
+      <td>16</td>
+      <td>0 days 00:01:20.126000</td>
+      <td>4</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:26.749000</td>
+      <td>0 days 00:00:26.777000</td>
+      <td>0 days 00:00:26.600000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>4.0</td>
+      <td>True</td>
+      <td>0 days 00:24:03.991000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:09:05.084</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0 days 00:27:09.461000</td>
+      <td>16</td>
+      <td>0 days 00:01:45.344000</td>
+      <td>5</td>
+      <td>1</td>
+      <td>NaT</td>
+      <td>NaT</td>
+      <td>0 days 00:00:33.884000</td>
+      <td>0 days 00:00:37.703000</td>
+      <td>0 days 00:00:33.757000</td>
+      <td>...</td>
+      <td>False</td>
+      <td>MEDIUM</td>
+      <td>5.0</td>
+      <td>True</td>
+      <td>0 days 00:25:24.117000</td>
+      <td>Ferrari</td>
+      <td>LEC</td>
+      <td>1</td>
+      <td>True</td>
+      <td>2019-09-07 13:10:25.210</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 27 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="car-telemetry-data" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="car-telemetry-data"><span class="header-section-number">2.3</span> Car Telemetry Data</h2>
+<p>Perhaps more interestingly, we can look up regular samples of raw car data for a particular driver:</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>monza_quali.car_data[<span class="st">'16'</span>][:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Date</th>
+      <th>RPM</th>
+      <th>Speed</th>
+      <th>nGear</th>
+      <th>Throttle</th>
+      <th>Brake</th>
+      <th>DRS</th>
+      <th>Source</th>
+      <th>Time</th>
+      <th>SessionTime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2019-09-07 12:45:02.230</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>0</td>
+      <td>car</td>
+      <td>0 days 00:00:01.137000</td>
+      <td>0 days 00:00:01.137000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2019-09-07 12:45:02.470</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>0</td>
+      <td>car</td>
+      <td>0 days 00:00:01.377000</td>
+      <td>0 days 00:00:01.377000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2019-09-07 12:45:02.710</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>0</td>
+      <td>car</td>
+      <td>0 days 00:00:01.617000</td>
+      <td>0 days 00:00:01.617000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2019-09-07 12:45:02.990</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>0</td>
+      <td>car</td>
+      <td>0 days 00:00:01.897000</td>
+      <td>0 days 00:00:01.897000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2019-09-07 12:45:03.230</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>0</td>
+      <td>car</td>
+      <td>0 days 00:00:02.137000</td>
+      <td>0 days 00:00:02.137000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>An even more helpful telemetry data report includes a derived accumulated distance travelled round the track on each lap, as well as on-track contextual information, such as the distance to, and identity of, the driver ahead on-track.</p>
+<p>We can retrieve the telemetry data associated with a particular lap by calling the <code>get_telemetry()</code> method on a single lap object:</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We need to index to a particular lap record</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>lec_laps.iloc[<span class="dv">1</span>].get_telemetry()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Date</th>
+      <th>SessionTime</th>
+      <th>DriverAhead</th>
+      <th>DistanceToDriverAhead</th>
+      <th>Time</th>
+      <th>RPM</th>
+      <th>Speed</th>
+      <th>nGear</th>
+      <th>Throttle</th>
+      <th>Brake</th>
+      <th>DRS</th>
+      <th>Source</th>
+      <th>Distance</th>
+      <th>RelativeDistance</th>
+      <th>Status</th>
+      <th>X</th>
+      <th>Y</th>
+      <th>Z</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>2019-09-07 13:06:02.451</td>
+      <td>0 days 00:21:01.358000</td>
+      <td></td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00</td>
+      <td>11464</td>
+      <td>319</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>interpolation</td>
+      <td>0.031139</td>
+      <td>0.000005</td>
+      <td>OnTrack</td>
+      <td>-1413</td>
+      <td>-840</td>
+      <td>1871</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2019-09-07 13:06:02.521</td>
+      <td>0 days 00:21:01.428000</td>
+      <td></td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00.070000</td>
+      <td>11479</td>
+      <td>319</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>6.278267</td>
+      <td>0.001083</td>
+      <td>OnTrack</td>
+      <td>-1396</td>
+      <td>-769</td>
+      <td>1872</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2019-09-07 13:06:02.524</td>
+      <td>0 days 00:21:01.431000</td>
+      <td></td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00.073000</td>
+      <td>11509</td>
+      <td>320</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>6.546389</td>
+      <td>0.001129</td>
+      <td>OnTrack</td>
+      <td>-1395</td>
+      <td>-766</td>
+      <td>1872</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2019-09-07 13:06:02.764</td>
+      <td>0 days 00:21:01.671000</td>
+      <td>88</td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00.313000</td>
+      <td>11584</td>
+      <td>323</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>28.079722</td>
+      <td>0.004843</td>
+      <td>OnTrack</td>
+      <td>-1375</td>
+      <td>-566</td>
+      <td>1872</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2019-09-07 13:06:02.821</td>
+      <td>0 days 00:21:01.728000</td>
+      <td>88</td>
+      <td>400.671389</td>
+      <td>0 days 00:00:00.370000</td>
+      <td>11578</td>
+      <td>323</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>33.206760</td>
+      <td>0.005728</td>
+      <td>OnTrack</td>
+      <td>-1371</td>
+      <td>-520</td>
+      <td>1873</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>597</th>
+      <td>2019-09-07 13:07:22.522</td>
+      <td>0 days 00:22:21.429000</td>
+      <td>88</td>
+      <td>151.229167</td>
+      <td>0 days 00:01:20.071000</td>
+      <td>11512</td>
+      <td>319</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>5754.345540</td>
+      <td>0.992564</td>
+      <td>OnTrack</td>
+      <td>-1438</td>
+      <td>-1212</td>
+      <td>1870</td>
+    </tr>
+    <tr>
+      <th>598</th>
+      <td>2019-09-07 13:07:22.525</td>
+      <td>0 days 00:22:21.432000</td>
+      <td>88</td>
+      <td>150.462500</td>
+      <td>0 days 00:01:20.074000</td>
+      <td>11539</td>
+      <td>320</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>5754.613056</td>
+      <td>0.992610</td>
+      <td>OnTrack</td>
+      <td>-1437</td>
+      <td>-1208</td>
+      <td>1870</td>
+    </tr>
+    <tr>
+      <th>599</th>
+      <td>2019-09-07 13:07:22.765</td>
+      <td>0 days 00:22:21.672000</td>
+      <td>88</td>
+      <td>148.795833</td>
+      <td>0 days 00:01:20.314000</td>
+      <td>11575</td>
+      <td>322</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>5776.079722</td>
+      <td>0.996313</td>
+      <td>OnTrack</td>
+      <td>-1413</td>
+      <td>-945</td>
+      <td>1870</td>
+    </tr>
+    <tr>
+      <th>600</th>
+      <td>2019-09-07 13:07:22.822</td>
+      <td>0 days 00:22:21.729000</td>
+      <td>88</td>
+      <td>148.795833</td>
+      <td>0 days 00:01:20.371000</td>
+      <td>11607</td>
+      <td>322</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>5781.180410</td>
+      <td>0.997192</td>
+      <td>OnTrack</td>
+      <td>-1408</td>
+      <td>-889</td>
+      <td>1871</td>
+    </tr>
+    <tr>
+      <th>601</th>
+      <td>2019-09-07 13:07:22.868</td>
+      <td>0 days 00:22:21.775000</td>
+      <td>88</td>
+      <td>148.795833</td>
+      <td>0 days 00:01:20.417000</td>
+      <td>11623</td>
+      <td>322</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>interpolation</td>
+      <td>5785.295662</td>
+      <td>0.997902</td>
+      <td>OnTrack</td>
+      <td>-1403</td>
+      <td>-845</td>
+      <td>1871</td>
+    </tr>
+  </tbody>
+</table>
+<p>600 rows × 18 columns</p>
+</div>
+</div>
+</div>
+<p>We can more explicitly return the record for a specific lap by filtering on the <code>LapNumner</code>:</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> onLap(laps, lap):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Get record for a particular lap."""</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> laps[laps[<span class="st">"LapNumber"</span>]<span class="op">==</span>lap].iloc[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>onLap(lec_laps, <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>Time                      0 days 00:22:21.775000
+DriverNumber                                  16
+LapTime                   0 days 00:01:20.417000
+LapNumber                                      2
+Stint                                          1
+PitOutTime                                   NaT
+PitInTime                                    NaT
+Sector1Time               0 days 00:00:26.982000
+Sector2Time               0 days 00:00:26.734000
+Sector3Time               0 days 00:00:26.701000
+Sector1SessionTime        0 days 00:21:28.340000
+Sector2SessionTime        0 days 00:21:55.074000
+Sector3SessionTime        0 days 00:22:21.775000
+SpeedI1                                    323.0
+SpeedI2                                    342.0
+SpeedFL                                    318.0
+SpeedST                                    342.0
+IsPersonalBest                             False
+Compound                                  MEDIUM
+TyreLife                                     2.0
+FreshTyre                                   True
+LapStartTime              0 days 00:21:01.358000
+Team                                     Ferrari
+Driver                                       LEC
+TrackStatus                                    1
+IsAccurate                                  True
+LapStartDate          2019-09-07 13:06:02.451000
+Name: 1, dtype: object</code></pre>
+</div>
+</div>
+<p>We can get then telemetry for the lap by calling the <code>.get_telemetry()</code> method on the returned lap object:</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>onLap(lec_laps, <span class="dv">2</span>).get_telemetry()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Date</th>
+      <th>SessionTime</th>
+      <th>DriverAhead</th>
+      <th>DistanceToDriverAhead</th>
+      <th>Time</th>
+      <th>RPM</th>
+      <th>Speed</th>
+      <th>nGear</th>
+      <th>Throttle</th>
+      <th>Brake</th>
+      <th>DRS</th>
+      <th>Source</th>
+      <th>Distance</th>
+      <th>RelativeDistance</th>
+      <th>Status</th>
+      <th>X</th>
+      <th>Y</th>
+      <th>Z</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>2019-09-07 13:06:02.451</td>
+      <td>0 days 00:21:01.358000</td>
+      <td></td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00</td>
+      <td>11464</td>
+      <td>319</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>interpolation</td>
+      <td>0.031139</td>
+      <td>0.000005</td>
+      <td>OnTrack</td>
+      <td>-1413</td>
+      <td>-840</td>
+      <td>1871</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2019-09-07 13:06:02.521</td>
+      <td>0 days 00:21:01.428000</td>
+      <td></td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00.070000</td>
+      <td>11479</td>
+      <td>319</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>6.278267</td>
+      <td>0.001083</td>
+      <td>OnTrack</td>
+      <td>-1396</td>
+      <td>-769</td>
+      <td>1872</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2019-09-07 13:06:02.524</td>
+      <td>0 days 00:21:01.431000</td>
+      <td></td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00.073000</td>
+      <td>11509</td>
+      <td>320</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>6.546389</td>
+      <td>0.001129</td>
+      <td>OnTrack</td>
+      <td>-1395</td>
+      <td>-766</td>
+      <td>1872</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2019-09-07 13:06:02.764</td>
+      <td>0 days 00:21:01.671000</td>
+      <td>88</td>
+      <td>400.271389</td>
+      <td>0 days 00:00:00.313000</td>
+      <td>11584</td>
+      <td>323</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>28.079722</td>
+      <td>0.004843</td>
+      <td>OnTrack</td>
+      <td>-1375</td>
+      <td>-566</td>
+      <td>1872</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2019-09-07 13:06:02.821</td>
+      <td>0 days 00:21:01.728000</td>
+      <td>88</td>
+      <td>400.671389</td>
+      <td>0 days 00:00:00.370000</td>
+      <td>11578</td>
+      <td>323</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>33.206760</td>
+      <td>0.005728</td>
+      <td>OnTrack</td>
+      <td>-1371</td>
+      <td>-520</td>
+      <td>1873</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>597</th>
+      <td>2019-09-07 13:07:22.522</td>
+      <td>0 days 00:22:21.429000</td>
+      <td>88</td>
+      <td>151.229167</td>
+      <td>0 days 00:01:20.071000</td>
+      <td>11512</td>
+      <td>319</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>5754.345540</td>
+      <td>0.992564</td>
+      <td>OnTrack</td>
+      <td>-1438</td>
+      <td>-1212</td>
+      <td>1870</td>
+    </tr>
+    <tr>
+      <th>598</th>
+      <td>2019-09-07 13:07:22.525</td>
+      <td>0 days 00:22:21.432000</td>
+      <td>88</td>
+      <td>150.462500</td>
+      <td>0 days 00:01:20.074000</td>
+      <td>11539</td>
+      <td>320</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>5754.613056</td>
+      <td>0.992610</td>
+      <td>OnTrack</td>
+      <td>-1437</td>
+      <td>-1208</td>
+      <td>1870</td>
+    </tr>
+    <tr>
+      <th>599</th>
+      <td>2019-09-07 13:07:22.765</td>
+      <td>0 days 00:22:21.672000</td>
+      <td>88</td>
+      <td>148.795833</td>
+      <td>0 days 00:01:20.314000</td>
+      <td>11575</td>
+      <td>322</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>car</td>
+      <td>5776.079722</td>
+      <td>0.996313</td>
+      <td>OnTrack</td>
+      <td>-1413</td>
+      <td>-945</td>
+      <td>1870</td>
+    </tr>
+    <tr>
+      <th>600</th>
+      <td>2019-09-07 13:07:22.822</td>
+      <td>0 days 00:22:21.729000</td>
+      <td>88</td>
+      <td>148.795833</td>
+      <td>0 days 00:01:20.371000</td>
+      <td>11607</td>
+      <td>322</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>pos</td>
+      <td>5781.180410</td>
+      <td>0.997192</td>
+      <td>OnTrack</td>
+      <td>-1408</td>
+      <td>-889</td>
+      <td>1871</td>
+    </tr>
+    <tr>
+      <th>601</th>
+      <td>2019-09-07 13:07:22.868</td>
+      <td>0 days 00:22:21.775000</td>
+      <td>88</td>
+      <td>148.795833</td>
+      <td>0 days 00:01:20.417000</td>
+      <td>11623</td>
+      <td>322</td>
+      <td>8</td>
+      <td>100</td>
+      <td>False</td>
+      <td>8</td>
+      <td>interpolation</td>
+      <td>5785.295662</td>
+      <td>0.997902</td>
+      <td>OnTrack</td>
+      <td>-1403</td>
+      <td>-845</td>
+      <td>1871</td>
+    </tr>
+  </tbody>
+</table>
+<p>600 rows × 18 columns</p>
+</div>
+</div>
+</div>
+<p>Find the fastest lap from a set of laps:</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lec_fast_lap <span class="op">=</span>  lec_laps.pick_fastest()</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lec_fast_lap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>Time                      0 days 01:11:14.868000
+DriverNumber                                  16
+LapTime                   0 days 00:01:19.307000
+LapNumber                                     14
+Stint                                          5
+PitOutTime                                   NaT
+PitInTime                                    NaT
+Sector1Time               0 days 00:00:26.469000
+Sector2Time               0 days 00:00:26.412000
+Sector3Time               0 days 00:00:26.426000
+Sector1SessionTime        0 days 01:10:22.030000
+Sector2SessionTime        0 days 01:10:48.442000
+Sector3SessionTime        0 days 01:11:14.868000
+SpeedI1                                    329.0
+SpeedI2                                    347.0
+SpeedFL                                    321.0
+SpeedST                                    349.0
+IsPersonalBest                              True
+Compound                                    SOFT
+TyreLife                                     3.0
+FreshTyre                                   True
+LapStartTime              0 days 01:09:55.561000
+Team                                     Ferrari
+Driver                                       LEC
+TrackStatus                                    2
+IsAccurate                                  True
+LapStartDate          2019-09-07 13:54:56.654000
+Name: 13, dtype: object</code></pre>
+</div>
+</div>
+<p>We can also iterate over the laps, for example as <code>monza_quali.laps.pick_driver(16).iterlaps()</code>; each iteration returns a 2-tuple of the car number and the data for a particular lap.</p>
+<p>We can get the telemetry for that driver on each lap by calling the <code>.get_telemetry()</code> method on the second (lap) element in the 2-tuple.</p>
+</section>
+<section id="simple-plots" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="simple-plots"><span class="header-section-number">2.4</span> Simple Plots</h2>
+<p>The <code>fastf1</code> package also provides a range of tools to support the plotting of data:</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastf1 <span class="im">import</span> plotting</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Configures timebase for axis ticks</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plotting.setup_mpl()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For example, a range of labels and colour schemes are defined for enriching displays:</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ff1.plotting.TEAM_TRANSLATE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>{'MER': 'mercedes',
+ 'FER': 'ferrari',
+ 'RBR': 'red bull',
+ 'MCL': 'mclaren',
+ 'APN': 'alpine',
+ 'AMR': 'aston martin',
+ 'ARR': 'alfa romeo',
+ 'APT': 'alphatauri',
+ 'HAA': 'haas',
+ 'WIL': 'williams'}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ff1.plotting.TEAM_COLORS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>{'mercedes': '#00d2be',
+ 'ferrari': '#dc0000',
+ 'red bull': '#0600ef',
+ 'mclaren': '#ff8700',
+ 'alpine': '#0090ff',
+ 'aston martin': '#006f62',
+ 'alfa romeo': '#900000',
+ 'alphatauri': '#2b4562',
+ 'haas': '#ffffff',
+ 'williams': '#005aff'}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ff1.plotting.DRIVER_COLORS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>{'valtteri bottas': '#900000',
+ 'zhou guanyu': '#500000',
+ 'pierre gasly': '#2b4562',
+ 'yuki tsunoda': '#356cac',
+ 'fernando alonso': '#0090ff',
+ 'esteban ocon': '#70c2ff',
+ 'sebastian vettel': '#006f62',
+ 'lance stroll': '#25a617',
+ 'nico hulkenberg': '#2f9b90',
+ 'charles leclerc': '#dc0000',
+ 'carlos sainz': '#ff8181',
+ 'kevin magnussen': '#ffffff',
+ 'mick schumacher': '#cacaca',
+ 'daniel ricciardo': '#ff8700',
+ 'lando norris': '#eeb370',
+ 'lewis hamilton': '#00d2be',
+ 'george russell': '#24ffff',
+ 'max verstappen': '#0600ef',
+ 'sergio perez': '#716de2',
+ 'alexander albon': '#005aff',
+ 'nicholas latifi': '#012564'}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>ff1.plotting.COLOR_PALETTE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>['#FF79C6', '#50FA7B', '#8BE9FD', '#BD93F9', '#FFB86C', '#FF5555', '#F1FA8C']</code></pre>
+</div>
+</div>
+<p>We can trivially plot the speed against the distance round the track, for example, using telemetry data:</p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get the telemetry for a lap </span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>lec_telem <span class="op">=</span> lec_fast_lap.get_telemetry()</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> lec_telem[<span class="st">'Distance'</span>]</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>vCar <span class="op">=</span> lec_telem[<span class="st">'Speed'</span>]</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a chart object</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the speed against distance round track</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>ax.plot(t, vCar, label<span class="op">=</span><span class="st">'Personal fastest lap'</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Add axis labels</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Distance round track'</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Speed [Km/h]'</span>)</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Add title</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Example speed track round track'</span>)</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Show legend</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>ax.legend()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="fastf1-demo_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>With access to lap data associated with a session, we can generate a wide range of charts that summarise different aspects of the session.</p>
+<p>For example, let’s get the data from a particular race:</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>race <span class="op">=</span> ff1.get_session(<span class="dv">2020</span>, <span class="st">'Turkish Grand Prix'</span>, <span class="st">'R'</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>race.load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>core           INFO     Loading data for Turkish Grand Prix - Race [v2.2.9]
+api            INFO     Using cached data for driver_info
+api            INFO     Using cached data for timing_data
+api            INFO     Using cached data for timing_app_data
+core           INFO     Processing timing data...
+api            INFO     Using cached data for session_status_data
+api            INFO     Using cached data for track_status_data
+api            INFO     Using cached data for car_data
+api            INFO     Using cached data for position_data
+api            INFO     Using cached data for weather_data
+api            INFO     Using cached data for race_control_messages
+core           INFO     Finished loading data for 20 drivers: ['44', '11', '5', '16', '55', '33', '23', '4', '18', '3', '31', '26', '10', '77', '7', '63', '20', '8', '6', '99']</code></pre>
+</div>
+</div>
+<p>The following function can be used to plot a chart showing laptimes over the course of a session for one or more drivers.</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastf1.plotting <span class="im">import</span> DRIVER_COLORS, DRIVER_TRANSLATE</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_laptimes(race, drivers):</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Plot laptimes over the course of a race."""</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    drivers <span class="op">=</span> [drivers] <span class="cf">if</span> <span class="bu">isinstance</span>(drivers, <span class="bu">str</span>) <span class="cf">else</span> drivers</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate an appropriately coloured trace for each driver</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _driver <span class="kw">in</span> drivers:</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        driver <span class="op">=</span> race.laps.pick_driver(_driver)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>        ax.plot(driver[<span class="st">'LapNumber'</span>], driver[<span class="st">'LapTime'</span>],</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>DRIVER_COLORS[DRIVER_TRANSLATE[_driver]])</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Annotate the chart with a title and axis labels</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">" vs "</span>.join(drivers))</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Lap Number"</span>)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Lap Time"</span>)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig, ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now compare laptimes over the course of the race in a graphical way:</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>plot_laptimes(race, [<span class="st">"HAM"</span>, <span class="st">"LEC"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="fastf1-demo_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="telemetry-visualisations-via-track-maps" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="telemetry-visualisations-via-track-maps"><span class="header-section-number">2.5</span> Telemetry Visualisations via Track Maps</h2>
+<p>X and Y positions seems to be co-ordinate locations for an on-screen display ( https://github.com/theOehrly/Fast-F1/issues/64 ). This means we probably aren’t seeing location data at a resolution good enough to display racing lines on a map, which accurate GPS data <em>would</em> give us.</p>
+<p>We can create a simple function to display a map of the track as generated from the <code>X</code> and <code>Y</code> co-ordinates of the sampled telemetry data.</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_track(lap, linewidth<span class="op">=</span><span class="dv">16</span>, color<span class="op">=</span><span class="st">"white"</span>):</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate a track map from telemetry data co-ordinates."""</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                           figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">6.75</span>))</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    ax.plot(lap.telemetry[<span class="st">'X'</span>], lap.telemetry[<span class="st">'Y'</span>],</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>color, linestyle<span class="op">=</span><span class="st">'-'</span>, linewidth<span class="op">=</span>linewidth, zorder<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig, ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plot_track(lec_fast_lap)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a title to the figure object</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="ss">f'Track map'</span>, size<span class="op">=</span><span class="dv">24</span>, y<span class="op">=</span><span class="fl">0.97</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="fastf1-demo_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The <a href="https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line.html#multicolored-lines"><code>matplotlib</code> documentation</a> provides an example for generating a multicoloured line from a list of co-ordinates. Consecutive pairs of co-ordinates define consecutive line segments. The line segments are then coloured according to a particular colour mapped value.</p>
+<p>The following function will generate a coloured trace overlaying the track map that visualises one of the telemetry measures.</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.collections <span class="im">import</span> LineCollection</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_multicoloured_line(lap, color<span class="op">=</span><span class="st">'Speed'</span>, title<span class="op">=</span><span class="st">''</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                           colormap<span class="op">=</span>mpl.cm.plasma, linewidth<span class="op">=</span><span class="dv">5</span>, ax<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate a matplotlib plottable mutlicoloured line."""</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plot_track(lap, linewidth<span class="op">=</span>linewidth<span class="op">+</span><span class="dv">2</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> ax.get_figure()</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">##############################################################################</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a set of line segments so that we can color them</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># individually. This creates the points as a N x 1 x 2 array so that we can</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># stack points together easily to get the segments. The segments array for</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># line collection needs to be (numlines) x (points per line) x 2 (for x and y)</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> lap.telemetry[<span class="st">'X'</span>] </span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> lap.telemetry[<span class="st">'Y'</span>]</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>    _color <span class="op">=</span> lap.telemetry[color]</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    points <span class="op">=</span> np.array([X, Y]).T.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    segments <span class="op">=</span> np.concatenate([points[:<span class="op">-</span><span class="dv">1</span>], points[<span class="dv">1</span>:]], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> color <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create a continuous norm to map from data points to colors</span></span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>        norm <span class="op">=</span> plt.Normalize(_color.<span class="bu">min</span>(), _color.<span class="bu">max</span>())</span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>        lc <span class="op">=</span> LineCollection(segments, cmap<span class="op">=</span>colormap, norm<span class="op">=</span>norm, linestyle<span class="op">=</span><span class="st">'-'</span>, linewidth<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Set the values used for colormapping</span></span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>        lc.set_array(_color)</span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>        lc <span class="op">=</span> LineCollection(segments, linestyle<span class="op">=</span><span class="st">'-'</span>, linewidth<span class="op">=</span>linewidth)</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>    line <span class="op">=</span> ax.add_collection(lc)</span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add color bar legend</span></span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>    fig.colorbar(line, ax<span class="op">=</span>ax, orientation<span class="op">=</span><span class="st">"horizontal"</span>)</span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add title</span></span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> title:</span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>        fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>title<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>color<span class="sc">}</span><span class="ss">)"</span>, size<span class="op">=</span><span class="dv">24</span>, y<span class="op">=</span><span class="fl">0.97</span>)</span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now plot telemtry data traces against the position on track at which they we recorded:</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>get_multicoloured_line(lec_fast_lap, title<span class="op">=</span><span class="st">"Example track map"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="fastf1-demo_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>get_multicoloured_line(lec_fast_lap, <span class="st">"Throttle"</span>, title<span class="op">=</span><span class="st">"Example track map"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="fastf1-demo_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="retrieving-data-from-the-ergast-api" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="retrieving-data-from-the-ergast-api"><span class="header-section-number">2.6</span> Retrieving Data from the ergast API</h2>
+<p>Basic support for retrieving data from the <a href="https://ergast.com/mrd/"><em>ergast</em> historical motor racing results data API</a> is provided.</p>
+<p>For example, we can return summary results data for a particular race (<code>"Race"</code>) or qualifying session (<code>"Qualifying</code>“) in a particular season:</p>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastf1 <span class="im">import</span> ergast</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>erd_race <span class="op">=</span> ergast.fetch_results(<span class="dv">2022</span>, <span class="dv">2</span>, <span class="st">"Race"</span>)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>erd_race[:<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>[{'number': '1',
+  'position': '1',
+  'positionText': '1',
+  'points': '25',
+  'Driver': {'driverId': 'max_verstappen',
+   'permanentNumber': '33',
+   'code': 'VER',
+   'url': 'http://en.wikipedia.org/wiki/Max_Verstappen',
+   'givenName': 'Max',
+   'familyName': 'Verstappen',
+   'dateOfBirth': '1997-09-30',
+   'nationality': 'Dutch'},
+  'Constructor': {'constructorId': 'red_bull',
+   'url': 'http://en.wikipedia.org/wiki/Red_Bull_Racing',
+   'name': 'Red Bull',
+   'nationality': 'Austrian'},
+  'grid': '4',
+  'laps': '50',
+  'status': 'Finished',
+  'Time': {'millis': '5059293', 'time': '1:24:19.293'},
+  'FastestLap': {'rank': '2',
+   'lap': '50',
+   'Time': {'time': '1:31.772'},
+   'AverageSpeed': {'units': 'kph', 'speed': '242.191'}}}]</code></pre>
+</div>
+</div>
+<p>We can trivially cast the returned JSON data to a flattened <code>pandas</code> dataframe:</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>pd.json_normalize(erd_race).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>number</th>
+      <th>position</th>
+      <th>positionText</th>
+      <th>points</th>
+      <th>grid</th>
+      <th>laps</th>
+      <th>status</th>
+      <th>Driver.driverId</th>
+      <th>Driver.permanentNumber</th>
+      <th>Driver.code</th>
+      <th>...</th>
+      <th>Constructor.url</th>
+      <th>Constructor.name</th>
+      <th>Constructor.nationality</th>
+      <th>Time.millis</th>
+      <th>Time.time</th>
+      <th>FastestLap.rank</th>
+      <th>FastestLap.lap</th>
+      <th>FastestLap.Time.time</th>
+      <th>FastestLap.AverageSpeed.units</th>
+      <th>FastestLap.AverageSpeed.speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>25</td>
+      <td>4</td>
+      <td>50</td>
+      <td>Finished</td>
+      <td>max_verstappen</td>
+      <td>33</td>
+      <td>VER</td>
+      <td>...</td>
+      <td>http://en.wikipedia.org/wiki/Red_Bull_Racing</td>
+      <td>Red Bull</td>
+      <td>Austrian</td>
+      <td>5059293</td>
+      <td>1:24:19.293</td>
+      <td>2</td>
+      <td>50</td>
+      <td>1:31.772</td>
+      <td>kph</td>
+      <td>242.191</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>16</td>
+      <td>2</td>
+      <td>2</td>
+      <td>19</td>
+      <td>2</td>
+      <td>50</td>
+      <td>Finished</td>
+      <td>leclerc</td>
+      <td>16</td>
+      <td>LEC</td>
+      <td>...</td>
+      <td>http://en.wikipedia.org/wiki/Scuderia_Ferrari</td>
+      <td>Ferrari</td>
+      <td>Italian</td>
+      <td>5059842</td>
+      <td>+0.549</td>
+      <td>1</td>
+      <td>48</td>
+      <td>1:31.634</td>
+      <td>kph</td>
+      <td>242.556</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>55</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+      <td>3</td>
+      <td>50</td>
+      <td>Finished</td>
+      <td>sainz</td>
+      <td>55</td>
+      <td>SAI</td>
+      <td>...</td>
+      <td>http://en.wikipedia.org/wiki/Scuderia_Ferrari</td>
+      <td>Ferrari</td>
+      <td>Italian</td>
+      <td>5067390</td>
+      <td>+8.097</td>
+      <td>3</td>
+      <td>48</td>
+      <td>1:31.905</td>
+      <td>kph</td>
+      <td>241.841</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11</td>
+      <td>4</td>
+      <td>4</td>
+      <td>12</td>
+      <td>1</td>
+      <td>50</td>
+      <td>Finished</td>
+      <td>perez</td>
+      <td>11</td>
+      <td>PER</td>
+      <td>...</td>
+      <td>http://en.wikipedia.org/wiki/Red_Bull_Racing</td>
+      <td>Red Bull</td>
+      <td>Austrian</td>
+      <td>5070093</td>
+      <td>+10.800</td>
+      <td>4</td>
+      <td>46</td>
+      <td>1:32.042</td>
+      <td>kph</td>
+      <td>241.481</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>63</td>
+      <td>5</td>
+      <td>5</td>
+      <td>10</td>
+      <td>6</td>
+      <td>50</td>
+      <td>Finished</td>
+      <td>russell</td>
+      <td>63</td>
+      <td>RUS</td>
+      <td>...</td>
+      <td>http://en.wikipedia.org/wiki/Mercedes-Benz_in_...</td>
+      <td>Mercedes</td>
+      <td>German</td>
+      <td>5092025</td>
+      <td>+32.732</td>
+      <td>7</td>
+      <td>43</td>
+      <td>1:32.821</td>
+      <td>kph</td>
+      <td>239.454</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 26 columns</p>
+</div>
+</div>
+</div>
+<p>The <em>ergast</em> API can also provide season summary information:</p>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pd.json_normalize(ergast.fetch_season(<span class="dv">2022</span>)).head(<span class="dv">2</span>).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>season</th>
+      <td>2022</td>
+      <td>2022</td>
+    </tr>
+    <tr>
+      <th>round</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>url</th>
+      <td>http://en.wikipedia.org/wiki/2022_Bahrain_Gran...</td>
+      <td>http://en.wikipedia.org/wiki/2022_Saudi_Arabia...</td>
+    </tr>
+    <tr>
+      <th>raceName</th>
+      <td>Bahrain Grand Prix</td>
+      <td>Saudi Arabian Grand Prix</td>
+    </tr>
+    <tr>
+      <th>date</th>
+      <td>2022-03-20</td>
+      <td>2022-03-27</td>
+    </tr>
+    <tr>
+      <th>time</th>
+      <td>15:00:00Z</td>
+      <td>17:00:00Z</td>
+    </tr>
+    <tr>
+      <th>Circuit.circuitId</th>
+      <td>bahrain</td>
+      <td>jeddah</td>
+    </tr>
+    <tr>
+      <th>Circuit.url</th>
+      <td>http://en.wikipedia.org/wiki/Bahrain_Internati...</td>
+      <td>http://en.wikipedia.org/wiki/Jeddah_Street_Cir...</td>
+    </tr>
+    <tr>
+      <th>Circuit.circuitName</th>
+      <td>Bahrain International Circuit</td>
+      <td>Jeddah Corniche Circuit</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.lat</th>
+      <td>26.0325</td>
+      <td>21.6319</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.long</th>
+      <td>50.5106</td>
+      <td>39.1044</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.locality</th>
+      <td>Sakhir</td>
+      <td>Jeddah</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.country</th>
+      <td>Bahrain</td>
+      <td>Saudi Arabia</td>
+    </tr>
+    <tr>
+      <th>FirstPractice.date</th>
+      <td>2022-03-18</td>
+      <td>2022-03-25</td>
+    </tr>
+    <tr>
+      <th>FirstPractice.time</th>
+      <td>12:00:00Z</td>
+      <td>14:00:00Z</td>
+    </tr>
+    <tr>
+      <th>SecondPractice.date</th>
+      <td>2022-03-18</td>
+      <td>2022-03-25</td>
+    </tr>
+    <tr>
+      <th>SecondPractice.time</th>
+      <td>15:00:00Z</td>
+      <td>17:00:00Z</td>
+    </tr>
+    <tr>
+      <th>ThirdPractice.date</th>
+      <td>2022-03-19</td>
+      <td>2022-03-26</td>
+    </tr>
+    <tr>
+      <th>ThirdPractice.time</th>
+      <td>12:00:00Z</td>
+      <td>14:00:00Z</td>
+    </tr>
+    <tr>
+      <th>Qualifying.date</th>
+      <td>2022-03-19</td>
+      <td>2022-03-26</td>
+    </tr>
+    <tr>
+      <th>Qualifying.time</th>
+      <td>15:00:00Z</td>
+      <td>17:00:00Z</td>
+    </tr>
+    <tr>
+      <th>Sprint.date</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Sprint.time</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We can also request the metadata describing an event more directly:</p>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>pd.json_normalize(ergast.fetch_weekend(<span class="dv">2022</span>, <span class="dv">2</span>)).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>season</th>
+      <td>2022</td>
+    </tr>
+    <tr>
+      <th>round</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>url</th>
+      <td>http://en.wikipedia.org/wiki/2022_Saudi_Arabia...</td>
+    </tr>
+    <tr>
+      <th>raceName</th>
+      <td>Saudi Arabian Grand Prix</td>
+    </tr>
+    <tr>
+      <th>date</th>
+      <td>2022-03-27</td>
+    </tr>
+    <tr>
+      <th>time</th>
+      <td>17:00:00Z</td>
+    </tr>
+    <tr>
+      <th>Circuit.circuitId</th>
+      <td>jeddah</td>
+    </tr>
+    <tr>
+      <th>Circuit.url</th>
+      <td>http://en.wikipedia.org/wiki/Jeddah_Street_Cir...</td>
+    </tr>
+    <tr>
+      <th>Circuit.circuitName</th>
+      <td>Jeddah Corniche Circuit</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.lat</th>
+      <td>21.6319</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.long</th>
+      <td>39.1044</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.locality</th>
+      <td>Jeddah</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.country</th>
+      <td>Saudi Arabia</td>
+    </tr>
+    <tr>
+      <th>Circuit.Location.alt</th>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>FirstPractice.date</th>
+      <td>2022-03-25</td>
+    </tr>
+    <tr>
+      <th>FirstPractice.time</th>
+      <td>14:00:00Z</td>
+    </tr>
+    <tr>
+      <th>SecondPractice.date</th>
+      <td>2022-03-25</td>
+    </tr>
+    <tr>
+      <th>SecondPractice.time</th>
+      <td>17:00:00Z</td>
+    </tr>
+    <tr>
+      <th>ThirdPractice.date</th>
+      <td>2022-03-26</td>
+    </tr>
+    <tr>
+      <th>ThirdPractice.time</th>
+      <td>14:00:00Z</td>
+    </tr>
+    <tr>
+      <th>Qualifying.date</th>
+      <td>2022-03-26</td>
+    </tr>
+    <tr>
+      <th>Qualifying.time</th>
+      <td>17:00:00Z</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">2.7</span> Summary</h2>
+<p>This chapter has provided a brief overview of some of the key features of the <code>fastf1</code> API, demonstrating how we can look up event metadata as well as lap information and car telemetry data.</p>
+<p>Some support is also provided for improving the quality of data visualisations by setting appropriate colour schemes or configuring <code>matplotlib</code> axes, for example.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./whatnext.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">What Next?</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
