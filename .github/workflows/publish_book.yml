@@ -1,7 +1,9 @@
 name: quarto-setup
 
-on: 
-  branch: main
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   quarto-linux:
