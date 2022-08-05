@@ -20,10 +20,11 @@ jobs:
           # uncomment below and fill to pin a version
           # version: 0.9.600
 
-      - name: Install dependencies
+      - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Install dependencies
         run: |
           pip install pandas numpy matplotlib https://github.com/theOehrly/Fast-F1/archive/refs/heads/master.zip
       # add software dependencies here
