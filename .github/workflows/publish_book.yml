@@ -38,10 +38,19 @@ jobs:
       #     CONNECT_SERVER: enter-the-server-url-here
       #     CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }} 
 
-      - name: Publish to GitHub Pages (and render)
-        uses: quarto-dev/quarto-actions/publish@v2
+      #- name: Publish to GitHub Pages (and render)
+      #  uses: quarto-dev/quarto-actions/publish@v2
+      #  with:
+      #    target: gh-pages
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
+      - name: Render Quarto Project
+        uses: quarto-dev/quarto-actions/render@v2
         with:
-          target: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
-      
+          to: all # If set, it will be equivalent to `quarto render --to html`
+          path: book # By default, the current working dir is used i.e `quarto render .`
+      - name: GitHub Pages action
+          uses: peaceiris/actions-gh-pages@v3.6.1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./book/_book
