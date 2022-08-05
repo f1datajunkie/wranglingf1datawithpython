@@ -19,38 +19,13 @@ jobs:
           tinytex: true 
           # uncomment below and fill to pin a version
           # version: 0.9.600
-
-      # add software dependencies here
-
-      # To publish to Netlify, RStudio Connect, or GitHub Pages, uncomment
-      # the appropriate block below
-      
-      # - name: Publish to Netlify (and render)
-      #   uses: quarto-dev/quarto-actions/publish@v2
-      #   with:
-      #     target: netlify
-      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        
-      # - name: Publish to RStudio Connect (and render)
-      #   uses: quarto-dev/quarto-actions/publish@v2
-      #   with:
-      #     target: connect
-      #     CONNECT_SERVER: enter-the-server-url-here
-      #     CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }} 
-
-      #- name: Publish to GitHub Pages (and render)
-      #  uses: quarto-dev/quarto-actions/publish@v2
-      #  with:
-      #    target: gh-pages
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
         with:
           to: all # If set, it will be equivalent to `quarto render --to html`
           path: book # By default, the current working dir is used i.e `quarto render .`
       - name: GitHub Pages action
-          uses: peaceiris/actions-gh-pages@v3.6.1
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./book/_book
+        uses: peaceiris/actions-gh-pages@v3.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./book/_book
