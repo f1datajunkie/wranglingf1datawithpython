@@ -9,6 +9,7 @@ jobs:
   quarto-linux:
     runs-on: ubuntu-latest
     steps:
+      - uses: quarto-dev/quarto-actions/setup@v2
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
         with:
