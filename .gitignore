@@ -1,0 +1,7 @@
+.cache
+.ipynb_checkpoints
+.Rproj.user
+.quarto
+.RData
+.RHistory
+_book
