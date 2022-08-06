@@ -21,7 +21,10 @@ format:
   html:
     theme: cosmo
   pdf:
-    documentclass: scrbook
+    documentclass: report #book
+    geometry:
+      - top=30mm
+      - left=15mm
   epub:
     cover-image: cover.png
 
