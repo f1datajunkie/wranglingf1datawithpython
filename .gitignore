@@ -5,3 +5,5 @@
 .RData
 .RHistory
 _book
+.DS_Store
+/.quarto/
