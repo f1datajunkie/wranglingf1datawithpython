@@ -1,2 +1,4 @@
 ipykernel
 fastf1
+seaborn
+plotnine
