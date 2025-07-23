@@ -1,5 +1,11 @@
 # Preface {.unnumbered}
 
-Several years ago, I put together a collection of recipes for analysing and visualising Formula One results and timing data using the R programming language, and published them via the Leanpub self-publishing platform.
+Several years ago, I put together a collection of recipes for analysing and visualising Formula One results and timing data using the R programming language in the form an `f1datajunkie` *"teach myself R"* side-project. The book was published in a "rolling" fashion via the Leanpub self-publishing platform, with new chapters appearing every week or so over a period of several months. As a data source, I used the `ergast` motor racing results database, as well as my own scrapes of PDF documents published by the FIA.
 
+Over the last few years, other projects got in the way of my dabblings with F1 data, not least a couple of years spent playing with WRC rally data as part of a parallel `RallyDataJunkie` project, and the occasional foray into Dakar Rally and WEC data.
 
+The development of the `fastf1` Python project over the last few years has greatly expanded the range of F1 data that's now readily available for playing with. As well as historical results data from the Python wrapped `ergast` API, the `fastf1` package also provides access to timing, results and telemetry data downloadable from the F1 website. And it's not just data - tools for generating simple visualisations of the data are also provided "off-the-shelf".
+
+But there's still a lot more playing we might be able to do with the data. So here's a side-project for 2025 — *Wrangling F1 Data with Python and `fastf1`*. This will take a form similar to the previous "Wrangling F1 Data with R" side-project, and take the form of a "living" online book developed in a serialised way over a period of months. Some of the chapters aand sketches are likely to mirror worked examples from the original R version of the book; but there will hopefully be some new ones, too, not least exploring what we might be able to do with some of the telemetry data.
+
+--Tony Hirst, Shanklin, Isle of Wight, December 2024.

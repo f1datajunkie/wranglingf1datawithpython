@@ -1,0 +1,7 @@
+# Getting Started
+
+This book is a hands-on guide, in two different ways. Firstly, code is provided in the expectation that you run it, or somehting like, to shape, analayse and visualise a wide range of Formula One related data. Secondly, the anyalses and visualisations generated from the source by the code is just a *startung point* for telling your own stories about what happened, when, and maybe even why, across sessions, weekends, championship seasons and even driver careers.
+
+To run the code, you'll need a couple of things: an *editing environment* where you can edit and modify the provided, and a *computational backend*, something that can actually execute the code and generate outputs from it.
+
+I'm anticipating that pretty much the only dependency required for most of the doodles and aketches is the `fastf1` package and *its* dependencies. This should be easy enough to add to most Python distributions (the package can be installed from the PyPi package repository using the command `pip install fastf1`) but there are a couple of other off-the-shelf ways accessing a fully functionining environment: via a devcontainer running on your desktop vui Docker, or in the cloud using a service such as GitHub Codespaces, or via a web-assembly backed notebook environment such as JupyterLite or marimo TO DO ?can it run in jupyterlite? no pure py wheel - .
